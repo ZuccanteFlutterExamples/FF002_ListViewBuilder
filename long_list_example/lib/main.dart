@@ -29,8 +29,39 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  String url = 'https://cdn.rive.app/animations/vehicles.riv';
-  int animations = 10000;
+  int _selectedIndex = 0;
+  static const TextStyle optionStyle =
+      TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
+  static List<Widget> _widgetOptions = <Widget>[
+    ListView.builder(
+      itemCount: 10000,
+      shrinkWrap: true,
+      itemBuilder: (BuildContext context, int index) {
+        return SizedBox(
+          height: 300,
+          child: RiveAnimation.network(
+            'https://cdn.rive.app/animations/vehicles.riv',
+            fit: BoxFit.fitWidth,
+          ),
+        );
+      },
+    ),
+    SingleChildScrollView(
+      child: Column(
+        children: [
+          for (int i = 0; i < 100; i++)
+            SizedBox(
+              height: 300,
+              child: RiveAnimation.network(
+                'https://cdn.rive.app/animations/vehicles.riv',
+                fit: BoxFit.fitWidth,
+              ),
+            )
+        ],
+      ),
+    ),
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,7 +69,35 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: SafeArea(
-        child: ListView.builder(
+        child: _widgetOptions.elementAt(_selectedIndex),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.account_tree_sharp,
+            ),
+            label: 'looong list',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.no_accounts,
+            ),
+            label: 'wrong list',
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.amber,
+        onTap: (int index) => setState(
+          () => _selectedIndex = index,
+        ),
+      ),
+    );
+  }
+}
+
+/*
+ListView.builder(
           itemCount: animations,
           shrinkWrap: true,
           itemBuilder: (BuildContext context, int index) {
@@ -51,7 +110,4 @@ class _MyHomePageState extends State<MyHomePage> {
             );
           },
         ),
-      ),
-    );
-  }
-}
+*/
