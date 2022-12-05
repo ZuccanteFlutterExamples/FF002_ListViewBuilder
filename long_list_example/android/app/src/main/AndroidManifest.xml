@@ -1,5 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.long_list_example">
+<uses-permission android:name="android.permission.INTERNET" />
    <application
         android:label="long_list_example"
         android:name="${applicationName}"

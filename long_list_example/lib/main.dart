@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:long_list_example/constants.dart';
 import 'package:rive/rive.dart';
 
 void main() {
@@ -10,11 +11,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: UIStrings.title,
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.amber,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(title: UIStrings.homeTitle),
     );
   }
 }
@@ -29,38 +30,49 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _selectedIndex = 0;
-  static const TextStyle optionStyle =
-      TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
-  static List<Widget> _widgetOptions = <Widget>[
-    ListView.builder(
-      itemCount: 10000,
-      shrinkWrap: true,
-      itemBuilder: (BuildContext context, int index) {
-        return SizedBox(
-          height: 300,
-          child: RiveAnimation.network(
-            'https://cdn.rive.app/animations/vehicles.riv',
-            fit: BoxFit.fitWidth,
-          ),
-        );
-      },
-    ),
-    SingleChildScrollView(
-      child: Column(
-        children: [
-          for (int i = 0; i < 100; i++)
-            SizedBox(
-              height: 300,
+  late int _selectedIndex;
+  late List<Widget> _widgetOptions;
+
+  @override
+  void initState() {
+    _selectedIndex = 0;
+    _widgetOptions = <Widget>[
+      ListView.builder(
+        itemCount: Measures.longListLength,
+        shrinkWrap: true,
+        itemBuilder: (BuildContext context, int index) {
+          return Padding(
+            padding: Measures.vehiclePadding,
+            child: SizedBox(
+              height: Measures.vehicleHeight,
               child: RiveAnimation.network(
-                'https://cdn.rive.app/animations/vehicles.riv',
+                URLS.vehicle,
                 fit: BoxFit.fitWidth,
               ),
-            )
-        ],
+            ),
+          );
+        },
       ),
-    ),
-  ];
+      SingleChildScrollView(
+        child: Column(
+          children: [
+            for (int i = 0; i < Measures.wrongListLength; i++)
+              Padding(
+                padding: Measures.vehiclePadding,
+                child: SizedBox(
+                  height: Measures.vehicleHeight,
+                  child: RiveAnimation.network(
+                    URLS.vehicle,
+                    fit: BoxFit.fitWidth,
+                  ),
+                ),
+              )
+          ],
+        ),
+      ),
+    ];
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -77,17 +89,17 @@ class _MyHomePageState extends State<MyHomePage> {
             icon: Icon(
               Icons.account_tree_sharp,
             ),
-            label: 'looong list',
+            label: UIStrings.longListTab,
           ),
           BottomNavigationBarItem(
             icon: Icon(
               Icons.no_accounts,
             ),
-            label: 'wrong list',
+            label: UIStrings.wrongListTab,
           ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.amber,
+        selectedItemColor: Theme.of(context).colorScheme.secondary,
         onTap: (int index) => setState(
           () => _selectedIndex = index,
         ),
@@ -95,19 +107,3 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
-
-/*
-ListView.builder(
-          itemCount: animations,
-          shrinkWrap: true,
-          itemBuilder: (BuildContext context, int index) {
-            return SizedBox(
-              height: 300,
-              child: RiveAnimation.network(
-                url,
-                fit: BoxFit.fitWidth,
-              ),
-            );
-          },
-        ),
-*/
